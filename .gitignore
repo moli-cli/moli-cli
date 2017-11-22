@@ -6,5 +6,5 @@ public/
 dist/
 native/
 *.txt
-.uba.config.js
+.moli.config.js
 .src/config/constants.js

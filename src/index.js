@@ -21,8 +21,8 @@ if (currentNodeVersion.split('.')[0] < 6) {
 }
 
 var installDir = os.homedir() + "/.moli-cli";
-var ubaVersionPath = installDir + "/moli-plugin.json";
-var ubaVersion = {
+var moliVersionPath = installDir + "/moli-plugin.json";
+var moliVersion = {
   version: {}
 }
 
@@ -30,13 +30,13 @@ function updateConfig() {
   var configObj = {};
   var pluginLists = ["init", "install", "dev","build"];
 
-  fs.readFile(ubaVersionPath, "utf8", (err, data) => {
+  fs.readFile(moliVersionPath, "utf8", (err, data) => {
     configObj = JSON.parse(data);
     pluginLists.forEach(function(_plugin){
       var version = require(`../node_modules/moli-${_plugin}/package.json`).version;
       configObj["version"][_plugin] = version;
     });
-    fs.writeFile(ubaVersionPath, JSON.stringify(configObj), (err) => {
+    fs.writeFile(moliVersionPath, JSON.stringify(configObj), (err) => {
       if (err)
         throw err;
       getHelp();
@@ -48,9 +48,9 @@ function checkConfig() {
   fs.access(installDir, function(err) { //判断moli配置文件夹是否存在
     if (err) {
       fs.mkdir(installDir, function() { //创建配置文件夹
-        fs.access(ubaVersionPath, function(err) {
+        fs.access(moliVersionPath, function(err) {
           if (err) { //不存在配置文件
-            fs.writeFile(ubaVersionPath, JSON.stringify(ubaVersion), (err) => { //创建配置文件
+            fs.writeFile(moliVersionPath, JSON.stringify(moliVersion), (err) => { //创建配置文件
               if (err)
                 throw err;
               updateConfig();
@@ -65,7 +65,7 @@ function checkConfig() {
 }
 
 function getHelp() {
-  fs.readFile(ubaVersionPath, "utf8", (err, data) => {
+  fs.readFile(moliVersionPath, "utf8", (err, data) => {
     if (err)
       throw err;
 
@@ -136,7 +136,7 @@ if (commands.length === 0) {
   if (pluginPath) {
     
     var _pName = `moli-${commands[0]}`;
-    $molilog(`the plugin is ` + _pName + 'is executing');
+    $molilog(`the plugin is ` + _pName + ' is executing');
     if (require(_pName).plugin) {
       require(_pName).plugin(opts);
     } else {
