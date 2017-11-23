@@ -29,8 +29,7 @@ var moliVersion = {
 
 function updateConfig() {
     var configObj = {};
-    var pluginLists = ["init", "dev", "build"];
-
+    var pluginLists = ["init", "dev", "build", "install", "spring"];
     fs.readFile(moliVersionPath, "utf8", (err, data) => {
         configObj = JSON.parse(data);
         pluginLists.forEach(function (_plugin) {
