@@ -1,6 +1,6 @@
 {
   "name": "moli-cli",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "",
   "main": "index.js",
   "directories": {
@@ -26,8 +26,8 @@
     "minimist": "^1.2.0",
     "chalk": "^2.1.0",
     "resolve": "^1.4.0",
-    "moli-dev": "^0.0.11",
-    "moli-init": "^0.0.8",
-    "moli-build": "^0.0.5"
+    "moli-dev": "^0.0.x",
+    "moli-init": "^0.0.x",
+    "moli-build": "^0.0.x"
   }
 }
