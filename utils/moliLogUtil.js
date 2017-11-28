@@ -5,7 +5,7 @@ module.exports = {
         if (msg) {
             // 这里需要使用蓝色输出
             if (chalk) {
-                console.log(chalk.hex('#0000ff')('[moli-info] >>>>>>>> ' + msg));
+                console.log(chalk.hex('#00ffff')('[moli-info] >>>>>>>> ' + msg));
             } else {
                 console.log('[moli-info] >>>>>>>> ' + msg);
             }
@@ -60,11 +60,9 @@ module.exports = {
             } else {
                 console.log(msg);
             }
-        }
-        if (msg) {
+        }else{
             console.log('');
         }
-
     },
     logInLine: function (msg, hex) {
         if (msg) {
