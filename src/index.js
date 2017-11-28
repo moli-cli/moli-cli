@@ -1,15 +1,6 @@
-function $molilog(msg) {
-    if (chalk) {
-        console.log(chalk.hex('#FF7E00')('[moli] >>>>>>>>>> ' + msg));
-    } else {
-        console.log('[moli] >>>>>>>>>> ' + msg);
-    }
-}
-
+var log = require("../utils/moliLogUtil");
 var os = require('os');
 var fs = require('fs');
-var chalk = require('chalk');
-$molilog('moli-cli starting......');
 var argv = require('minimist')(process.argv.slice(2));
 var commands = argv._;
 var resolve = require('resolve');
@@ -17,7 +8,7 @@ var path = require('path');
 
 var currentNodeVersion = process.versions.node;
 if (currentNodeVersion.split('.')[0] < 6) {
-    console.error(chalk.red('You are running Node ' + currentNodeVersion + '.\n' + 'Create moli App requires Node 6 or higher. \n' + 'Please update your version of Node.'));
+    log.error('You are running Node ' + currentNodeVersion + '.\n' + 'Create moli App requires Node 6 or higher. \n' + 'Please update your version of Node.');
     process.exit(1);
 }
 
@@ -25,22 +16,26 @@ var installDir = os.homedir() + "/.moli-cli";
 var moliVersionPath = installDir + "/moli-plugin.json";
 var moliVersion = {
     version: {}
-}
+};
+
+log.info('moli-cli starting......');
 
 function updateConfig() {
     var configObj = {};
     var pluginLists = ["init", "dev", "build", "install", "spring"];
-    fs.readFile(moliVersionPath, "utf8", (err, data) => {
+    fs.readFile(moliVersionPath, "utf8", function (err, data) {
         configObj = JSON.parse(data);
         pluginLists.forEach(function (_plugin) {
             var version = require(`../node_modules/moli-${_plugin}/package.json`).version;
             configObj["version"][_plugin] = version;
         });
-        fs.writeFile(moliVersionPath, JSON.stringify(configObj), (err) => {
-            if (err)
+        fs.writeFile(moliVersionPath, JSON.stringify(configObj), function (err) {
+            if (err) {
                 throw err;
+            }
             getHelp();
-        });
+        })
+        ;
     });
 }
 
@@ -50,9 +45,10 @@ function checkConfig() {
             fs.mkdir(installDir, function () { //创建配置文件夹
                 fs.access(moliVersionPath, function (err) {
                     if (err) { //不存在配置文件
-                        fs.writeFile(moliVersionPath, JSON.stringify(moliVersion), (err) => { //创建配置文件
-                            if (err)
+                        fs.writeFile(moliVersionPath, JSON.stringify(moliVersion), function (err) { //创建配置文件
+                            if (err) {
                                 throw err;
+                            }
                             updateConfig();
                         });
                     }
@@ -65,26 +61,26 @@ function checkConfig() {
 }
 
 function getHelp() {
-    fs.readFile(moliVersionPath, "utf8", (err, data) => {
-        if (err)
+    fs.readFile(moliVersionPath, "utf8", function (err, data) {
+        if (err) {
+            log.error("Get Version Error!");
             throw err;
-
-        var configObj = JSON.parse(data);
-        console.log();
-        console.log(chalk.green("  Usage: moli <command> [options]"));
-        console.log();
-        console.log();
-        console.log(chalk.green(`  Command:`));
-        console.log();
-        for (var item in configObj.version) {
-            console.log(chalk.green(`    ${item} \t\tv${configObj.version[item]}`));
         }
-        console.log();
-        console.log(chalk.green("  Options:"));
-        console.log();
-        console.log(chalk.green("    -h, --help     output usage information"));
-        console.log(chalk.green("    -v, --version  output the version number"));
-        console.log();
+        var configObj = JSON.parse(data);
+        log.log();
+        log.log("  Usage: moli <command> [options]");
+        log.log();
+        log.log(`  Command:`);
+        log.log();
+        for (var item in configObj.version) {
+            log.log(`    ${item} \t\tv${configObj.version[item]}`);
+        }
+        log.log();
+        log.log("  Options:");
+        log.log();
+        log.log("    -h, --help     output usage information");
+        log.log("    -v, --version  output the version number");
+        log.log();
     });
 }
 
@@ -93,16 +89,15 @@ function findPluginPath(command) {
         try {
             var pluginName = 'moli-' + command;
             var fullpath = path.join(__dirname, '..', 'node_modules');
-            $molilog('the plugin[' + pluginName + '] path is ' + fullpath);
+            log.info('the plugin[' + pluginName + '] path is ' + fullpath);
 
             return resolve.sync(pluginName, {
                 paths: [path.join(__dirname, '..', 'node_modules')]
             });
         } catch (e) {
-            console.log('');
-            console.log('  ' + chalk.green(command) + ' command is not installed.');
-            console.log('  You can try to install it by ' + chalk.blue.bold('moli-cli install ' + command) + '.');
-            console.log('');
+            log.error(command + ' command is not installed.');
+            log.error('You can try to install it by moli install ' + command);
+            process.exit(1);
         }
     }
 }
@@ -110,37 +105,30 @@ function findPluginPath(command) {
 //检查命令
 if (commands.length === 0) {
     if (argv.version || argv.v) {
-        console.log(chalk.green(require("../package.json").version));
-        $molilog("commands.length === 0 over, process exit!");
+        log.success(require("../package.json").version);
         process.exit(0);
     }
     checkConfig();
-    $molilog("commands.length === 0 over, process exit!");
 } else {
     var opts = {
         cmd: commands,
         argv: argv,
         name: require("../package.json").name
     };
-
-    $molilog('os.homedir() is ' + os.homedir());
-    $molilog('__dirname is ' + __dirname);
-    $molilog('commands is ' + JSON.stringify(commands));
-    $molilog('argv is ' + +JSON.stringify(argv));
-    $molilog('moli.config.js is at ' + path.resolve(".", "moli.config.js"));
-
-
+    log.info('os.homedir() is ' + os.homedir());
+    log.info('__dirname is ' + __dirname);
+    log.info('commands is ' + JSON.stringify(commands));
+    log.info('argv is ' + +JSON.stringify(argv));
+    log.info('moli.config.js is at ' + path.resolve(".", "moli.config.js"));
     var pluginPath = findPluginPath(commands[0]);
-
-    $molilog('path of plugin[' + commands[0] + '] required  is ' + pluginPath);
+    log.info('path of plugin[' + commands[0] + '] required  is ' + pluginPath);
     if (pluginPath) {
-
         var _pName = `moli-${commands[0]}`;
-        $molilog(`the plugin is ` + _pName + ' is executing');
+        log.info(`the plugin is ` + _pName + ' is executing');
         if (require(_pName).plugin) {
             require(_pName).plugin(opts);
         } else {
-            console.log(chalk.red("  Error : Plugin internal error."));
+            log.error("  Error : Plugin internal error.");
         }
     }
 }
