@@ -3,11 +3,11 @@ var chalk = require("chalk");
 module.exports = {
     info: function (msg) {
         if (msg) {
-            // 这里需要使用蓝色输出
+            // 这里使用红色输出
             if (chalk) {
-                console.log(chalk.hex('#00ffff')('[moli-info] >>>>>>>> ' + msg));
+                console.error(chalk.blue('[moli-info] >>>>>>>> ' + chalk.blue.bold(msg)));
             } else {
-                console.log('[moli-info] >>>>>>>> ' + msg);
+                console.error('[moli-info] >>>>>>>> ' + msg);
             }
         } else {
             console.log('[moli-info] >>>>>>>> ');
@@ -17,7 +17,7 @@ module.exports = {
         if (msg) {
             // 这里使用红色输出
             if (chalk) {
-                console.error(chalk.hex('#ff0000')('[moli-error] >>>>>>>> ' + msg));
+                console.error(chalk.red('[moli-error] >>>>>>>> ' + chalk.red.bold(msg)));
             } else {
                 console.error('[moli-error] >>>>>>>> ' + msg);
             }
@@ -30,7 +30,7 @@ module.exports = {
         if (msg) {
             // 这里需要使用黄色输出
             if (chalk) {
-                console.warn(chalk.hex('#ffff00')('[moli-warn] >>>>>>>> ' + msg));
+                console.warn(chalk.yellow('[moli-warn] >>>>>>>> ' + chalk.yellow.bold(msg)));
             } else {
                 console.warn('[moli-warn] >>>>>>>> ' + msg);
             }
@@ -43,7 +43,7 @@ module.exports = {
         if (msg) {
             // 这里需要使用绿色输出
             if (chalk) {
-                console.log(chalk.hex('#00ff00')('[moli-success] >>>>>>>> ' + msg));
+                console.log(chalk.cyan('[moli-success] >>>>>>>> ' + chalk.cyan.bold(msg)));
             } else {
                 console.log('[moli-success] >>>>>>>> ' + msg);
             }
@@ -60,7 +60,7 @@ module.exports = {
             } else {
                 console.log(msg);
             }
-        }else{
+        } else {
             console.log('');
         }
     },

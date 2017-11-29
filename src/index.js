@@ -67,6 +67,7 @@ function getHelp() {
             throw err;
         }
         var configObj = JSON.parse(data);
+        log.success("moli command help info");
         log.log();
         log.log("  Usage: moli <command> [options]");
         log.log();
